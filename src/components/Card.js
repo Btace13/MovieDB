@@ -1,7 +1,20 @@
 import React, {Component} from 'react';
 
-class Card extends Component{
-    render(){
+class Card extends Component{ 
+    constructor(props){
+    super(props);
+    this.state = {
+        newText: ''
+    }
+}
+handleTheNewText = (newerText) => {
+    this.setState({
+        newText: newerText
+    });
+    this.props.handleNewText(this.state.newText);
+};
+render(){
+    this.handleTheNewText('Wow');
         return(
 
            <main>
