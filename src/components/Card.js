@@ -11,10 +11,9 @@ handleTheNewText = (newerText) => {
     this.setState({
         newText: newerText
     });
-    this.props.handleNewText(this.state.newText);
 };
 render(){
-    this.handleTheNewText('Wow');
+
         return(
 
            <main>

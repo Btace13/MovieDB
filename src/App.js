@@ -18,7 +18,7 @@ myCallback = (newText) => {
       <div className="App">
           <Navbar/>
           <div className="container">
-          <h1>{this.state.text}</h1>
+          <h1 handleNewText={this.myCallback}>{this.state.text}</h1>
               <Header/>
               <Card/>
           </div>
