@@ -5,59 +5,89 @@ class Card extends Component{
     constructor(props){
         super(props);
         this.state = {
-            title: 'Ace'
+            movieId: '120',
+            title: 'Loading..',
+            tagline: 'Loading..',
+            overview: 'Loading..',
+            runtime: 'Loading..',
+            release_date: 'Loading..',
+            revenue: 'Loading..',
+            vote: 'Loading..'
+
         }
     }
-    componentWillMount(){
-        axios.get('https://api.themoviedb.org/3/movie/550?api_key=ea009f1bd0f8b5df0bc7838d68828108')
+    fetchApi(url) {
+
+        axios.get(url)
             .then((response) => {
-                 this.setState({title: response.data.title});
+                this.setState({
+                    title: response.data.title,
+                    tagline: response.data.tagline,
+                    overview:response.data.overview,
+                    runtime: response.data.runtime,
+                    release_date: response.data.release_date,
+                    revenue: response.data.revenue,
+                    vote: response.data.vote_average,
+                    backdrop: "https://image.tmdb.org/t/p/w500"+response.data.poster_path
+                });
+
                 console.log(response);
             })
             .catch(function (error) {
-                alert(error);
+                console.log(error);
             });
+
+    }
+    fetchMovieID(movieId) {
+        let url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=ea009f1bd0f8b5df0bc7838d68828108`;
+        this.fetchApi(url)
+    } // end function
+    componentWillMount(){
+
+    }
+    componentDidMount(){
+        let url = `https://api.themoviedb.org/3/movie/${this.state.movieId}?api_key=ea009f1bd0f8b5df0bc7838d68828108`;
+        this.fetchApi(url);
     }
     render(){
         return(
         <div>
             <header>
                 <div className="row">
-                    <form className="col s12">
+                    <form className="col s12" onSubmit={this.fetchMovieID(document.getElementById('lookUp').value)}>
                         <div className="row">
                             <div className="input-field col s12">
-                                <input id="email" type="text" className="validate" placeholder={'Movie Name'}/>
+                                <input value={''} id="lookUp" type="text" className="validate" placeholder={'Movie Name'}/>
                             </div>
                         </div>
                     </form>
                 </div>
             </header>
             <main>
-                <h1>{this.state.title}</h1>
                 <div className="row">
-                    <h1 className={'center'}>Howard The Duck</h1>
-                    <div className="col m4 s12">
-                        <img className={'responsive-img'} src="https://thedrunkenodyssey.files.wordpress.com/2015/05/howard1.jpg" alt="Howey"/>
+                    <h1 className={'center'}>{this.state.title}</h1>
+                    <div className="col m5 s12">
+                        <img className={'responsive-img'} src={this.state.backdrop} alt="Loading.."/>
                     </div>
-                    <div className="col m8 s12">
-                        <h4>You will believe that a duck can talk.</h4>
-                        <p className="flow-text">A scientific experiment unknowingly brings extraterrestrial life forms to the Earth through a laser beam. First is the cigar smoking drake Howard from the duck's planet. A few kids try to keep him from the greedy scientists and help him back to his planet. But then a much less friendly being arrives through the beam...</p>
+                    <div className="col m7 s12">
+                        <h4>{this.state.tagline}</h4>
+                        <p className="flow-text">{this.state.overview}</p>
                         <div className="row">
                             <div className="col s6">
                                 <h5>Original Release:</h5>
-                                <p>1986-08-01</p>
+                                <p>{this.state.release_date}</p>
                             </div>
                             <div className="col s6">
                                 <h5>Running Time:</h5>
-                                <p>110 mins</p>
+                                <p>{this.state.runtime} mins</p>
                             </div>
                             <div className="col s6">
                                 <h5>Box Office:</h5>
-                                <p>$37,962,774</p>
+                                <p>${this.state.revenue}</p>
                             </div>
                             <div className="col s6">
                                 <h5>Vote Average:</h5>
-                                <p>5.1 / 10</p>
+                                <p>{this.state.vote} / 10</p>
                             </div>
                         </div>
                     </div>
