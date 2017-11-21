@@ -54,7 +54,7 @@ class Card extends Component{
         <div>
             <header>
                 <div className="row">
-                    <form className="col s12" onSubmit={this.fetchMovieID(document.getElementById('lookUp').value)}>
+                    <form className="col s12">
                         <div className="row">
                             <div className="input-field col s12">
                                 <input value={''} id="lookUp" type="text" className="validate" placeholder={'Movie Name'}/>
