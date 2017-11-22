@@ -18,6 +18,7 @@ footer{
 nav{
   background: #e74c3c;
     padding: 0 20px;
+    margin-bottom: 15px;
 }
 h4, h5 {
     color: #e74c3c;
@@ -25,4 +26,14 @@ h4, h5 {
 p {
     font-size: 14pt;
     margin: 0;
+}
+input#movie_title_search{
+    color: #ee6e73 !important;
+}
+input#movie_title_search:focus{
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+input#movie_title_search::placeholder{
+    color: #ee6e73 !important;
 }

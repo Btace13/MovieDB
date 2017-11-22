@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import  axios from 'axios';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AutoComplete from 'material-ui/AutoComplete';
+
 
 class Card extends Component{
     constructor(props){
@@ -12,7 +15,8 @@ class Card extends Component{
             runtime: 'Loading..',
             release_date: 'Loading..',
             revenue: 'Loading..',
-            vote: 'Loading..'
+            vote: '',
+            dataSource: []
 
         }
     }
@@ -50,17 +54,30 @@ class Card extends Component{
         this.fetchApi(url);
     }
     render(){
+        const handleUpdateInput = (value) => {
+            // here we have to use  the value prop to search the API using the value and the query and then set the state to the movieID picked
+            axios.get(`https://api.themoviedb.org/3/search/movie?api_key=ea009f1bd0f8b5df0bc7838d68828108&language=en-US&query=${value}&page=1&include_adult=false`)
+                .then((response) => {
+                console.log(response);
+                    this.setState({
+                        dataSource: response.data.results
+                    })
+                })
+        };
         return(
         <div>
             <header>
                 <div className="row">
-                    <form className="col s12">
-                        <div className="row">
-                            <div className="input-field col s12">
-                                <input value={''} id="lookUp" type="text" className="validate" placeholder={'Movie Name'}/>
-                            </div>
-                        </div>
-                    </form>
+                    <MuiThemeProvider>
+                                    {/*<input id="lookUp" type="text" className="validate" placeholder={'Movie Name'}/>*/}
+                                    <AutoComplete
+                                        id={'movie_title_search'}
+                                        placeholder="Movie Title"
+                                        dataSource={this.state.dataSource}
+                                        onUpdateInput={handleUpdateInput}
+                                        fullWidth={true}
+                                    />
+                    </MuiThemeProvider>
                 </div>
             </header>
             <main>
