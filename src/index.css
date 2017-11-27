@@ -27,13 +27,14 @@ p {
     font-size: 14pt;
     margin: 0;
 }
-input#movie_title_search{
-    color: #ee6e73 !important;
+.rbt-input-wrapper div {
+    width: 100%;
+    display: block;
 }
-input#movie_title_search:focus{
-    border-bottom: none !important;
-    box-shadow: none !important;
+.rbt-input-wrapper{
+    display: block;
 }
-input#movie_title_search::placeholder{
-    color: #ee6e73 !important;
+.rbt-input-main::placeholder{
+    color: #e74c3c;
 }
+

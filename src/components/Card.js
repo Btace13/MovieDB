@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import  axios from 'axios';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AutoComplete from 'material-ui/AutoComplete';
+import {asyncContainer, Typeahead} from 'react-bootstrap-typeahead';
 
+const AsyncTypeahead = asyncContainer(Typeahead);
 
 class Card extends Component{
     constructor(props){
         super(props);
         this.state = {
-            movieId: '120',
+            movieId: '10658',
             title: 'Loading..',
             tagline: 'Loading..',
             overview: 'Loading..',
@@ -16,7 +16,9 @@ class Card extends Component{
             release_date: 'Loading..',
             revenue: 'Loading..',
             vote: '',
-            dataSource: []
+            options: [],
+            isLoading: false,
+            selected: ''
 
         }
     }
@@ -54,30 +56,31 @@ class Card extends Component{
         this.fetchApi(url);
     }
     render(){
-        const handleUpdateInput = (value) => {
-            // here we have to use  the value prop to search the API using the value and the query and then set the state to the movieID picked
-            axios.get(`https://api.themoviedb.org/3/search/movie?api_key=ea009f1bd0f8b5df0bc7838d68828108&language=en-US&query=${value}&page=1&include_adult=false`)
-                .then((response) => {
-                console.log(response);
-                    this.setState({
-                        dataSource: response.data.results
-                    })
-                })
-        };
         return(
         <div>
             <header>
                 <div className="row">
-                    <MuiThemeProvider>
-                                    {/*<input id="lookUp" type="text" className="validate" placeholder={'Movie Name'}/>*/}
-                                    <AutoComplete
-                                        id={'movie_title_search'}
-                                        placeholder="Movie Title"
-                                        dataSource={this.state.dataSource}
-                                        onUpdateInput={handleUpdateInput}
-                                        fullWidth={true}
-                                    />
-                    </MuiThemeProvider>
+                    <AsyncTypeahead
+                        isLoading={this.state.isLoading}
+                        onSearch={query => {
+                            this.setState({isLoading: true});
+                            axios.get(`https://api.themoviedb.org/3/search/movie?api_key=ea009f1bd0f8b5df0bc7838d68828108&language=en-US&query=${query}&page=1`)
+                                .then((response) => {
+                                let results = [];
+                                response.data.results.forEach((match) => {
+                                    results.push(match.original_title)
+                                });
+                                    return results;
+                                })
+                                .then((results) => this.setState({
+                                    isLoading: false,
+                                    options: results
+                                }));
+                        }}
+                        options={this.state.options}
+                        selectHintOnEnter = {true}
+                        placeholder = {'Enter Movie Title Here'}
+                    />
                 </div>
             </header>
             <main>
