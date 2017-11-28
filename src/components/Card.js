@@ -5,6 +5,7 @@ import {asyncContainer, Typeahead} from 'react-bootstrap-typeahead';
 const AsyncTypeahead = asyncContainer(Typeahead);
 
 class Card extends Component{
+    original_title;
     constructor(props){
         super(props);
         this.state = {
@@ -36,8 +37,6 @@ class Card extends Component{
                     vote: response.data.vote_average,
                     backdrop: "https://image.tmdb.org/t/p/w500"+response.data.poster_path
                 });
-
-                console.log(response);
             })
             .catch(function (error) {
                 console.log(error);
@@ -60,27 +59,36 @@ class Card extends Component{
         <div>
             <header>
                 <div className="row">
-                    <AsyncTypeahead
-                        isLoading={this.state.isLoading}
-                        onSearch={query => {
-                            this.setState({isLoading: true});
-                            axios.get(`https://api.themoviedb.org/3/search/movie?api_key=ea009f1bd0f8b5df0bc7838d68828108&language=en-US&query=${query}&page=1`)
-                                .then((response) => {
-                                let results = [];
-                                response.data.results.forEach((match) => {
-                                    results.push(match.original_title)
-                                });
-                                    return results;
-                                })
-                                .then((results) => this.setState({
-                                    isLoading: false,
-                                    options: results
-                                }));
-                        }}
-                        options={this.state.options}
-                        selectHintOnEnter = {true}
-                        placeholder = {'Enter Movie Title Here'}
-                    />
+                        <AsyncTypeahead
+                            isLoading={this.state.isLoading}
+                            onSearch={query => {
+                                this.setState({isLoading: true});
+                                axios.get(`https://api.themoviedb.org/3/search/movie?api_key=ea009f1bd0f8b5df0bc7838d68828108&language=en-US&query=${query}&page=1`)
+                                    .then((response) => {
+                                        let results = [];
+                                        response.data.results.forEach((match) => {
+                                            results.push(match.original_title)
+                                        });
+                                        return results;
+                                    })
+                                    .then((results) => this.setState({
+                                        isLoading: false,
+                                        options: results
+                                    }));
+                            }}
+                            value = {''}
+                            options={this.state.options}
+                            selectHintOnEnter = {true}
+                            placeholder = {'Search Movie Title Here'}
+                            onChange = { selectedItem => {
+                                axios.get(`https://api.themoviedb.org/3/search/movie?api_key=ea009f1bd0f8b5df0bc7838d68828108&language=en-US&query=${selectedItem}&page=1`)
+                                    .then((response) => {
+                                        const match = response.data.results[0].id;
+                                        this.fetchMovieID(match)
+                                    })
+                            }
+                            }
+                        />
                 </div>
             </header>
             <main>
